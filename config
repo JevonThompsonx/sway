@@ -71,6 +71,8 @@ bindsym XF86AudioMute exec pactl set-sink-volume @DEFAULT_SINK@ 0%
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym XF86MonBrightnessUp exec brightnessctl set +5%
 
+exec_always wpaperd
+
 ### Startup Commands ###
 exec_always waybar
 exec_always nm-applet --indicator
