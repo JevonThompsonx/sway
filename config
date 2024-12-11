@@ -1,0 +1,90 @@
+### BASIC SWAY CONFIG ###
+
+# Set mod key to Command (Super) key on Mac
+set $mod Mod4
+
+# Monitor settings for a MacBook Pro (2015) in Sway:
+# Replace this with the correct output name from `swaymsg -t get_outputs`
+output eDP-1 resolution 2560x1600 position 0 0 scale 2.0
+
+# Input configuration
+input "pointer:touchpad" {
+    tap enabled
+    natural_scroll enabled
+    dwt enabled
+}
+
+input "type:keyboard" {
+    xkb_layout us
+}
+
+### General Settings ###
+gaps inner 5
+gaps outer 10
+
+### Layout ###
+default_layout tabbed
+
+### Keybindings ###
+# Terminal (changed from Return to t)
+set $term foot
+bindsym $mod+t exec $term
+
+# Launcher
+bindsym $mod+d exec wofi --show drun --allow-images
+
+# Kill focused window
+bindsym $mod+q kill
+
+# Fullscreen toggle
+bindsym $mod+f fullscreen toggle
+
+# Move focus with arrow keys
+bindsym $mod+Left focus left
+bindsym $mod+Right focus right
+bindsym $mod+Up focus up
+bindsym $mod+Down focus down
+
+# Move windows with Shift + arrow keys
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Right move right
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Down move down
+
+# Workspaces
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+
+# Audio and Brightness
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioMute exec pactl set-sink-volume @DEFAULT_SINK@ 0%
+
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+
+### Startup Commands ###
+exec_always waybar
+exec_always nm-applet --indicator
+exec_always blueman-applet
+exec_always mako
+exec_always copyq
+exec_always wl-paste -t text --watch clipman store
+exec_always wl-clipboard-history -t
+
+# Media keys
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+# Screenshots
+bindsym Print exec grim ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H-%M-%S').png
+bindsym Shift+Print exec grim -g "$(slurp)" ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H-%M-%S').png
