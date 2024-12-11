@@ -5,7 +5,7 @@ set $mod Mod4
 
 # Monitor settings for a MacBook Pro (2015) in Sway:
 # Replace this with the correct output name from `swaymsg -t get_outputs`
-output eDP-1 resolution 2560x1600 position 0 0 scale 2.0
+output eDP-1 resolution 2560x1600 position 0 0 scale 1.75
 
 # Input configuration
 input "pointer:touchpad" {
@@ -23,7 +23,6 @@ gaps inner 5
 gaps outer 10
 
 ### Layout ###
-default_layout tabbed
 
 ### Keybindings ###
 # Terminal (changed from Return to t)
@@ -32,7 +31,7 @@ bindsym $mod+t exec $term
 
 # Launcher
 bindsym $mod+d exec wofi --show drun --allow-images
-
+bindsym $mod+Shift+d exec nwg-drawer
 # Kill focused window
 bindsym $mod+q kill
 
@@ -92,6 +91,7 @@ exec_always mako
 exec_always copyq
 exec_always wl-paste -t text --watch clipman store
 exec_always wl-clipboard-history -t
+exec_always dunst &
 
 # Media keys
 bindsym XF86AudioPlay exec playerctl play-pause
