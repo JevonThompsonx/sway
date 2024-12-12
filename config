@@ -29,14 +29,24 @@ gaps outer 10
 set $term foot
 bindsym $mod+t exec $term
 
-# Launcher
+# Launchers
 bindsym $mod+d exec wofi --show drun --allow-images
 bindsym $mod+Shift+d exec nwg-drawer
+
+# Shutdown menu 
+bindsym $mod+Shift+e exec nwg-bar
+
+#Thunar file manager 
+bindsym $mod+Shift+N exec Thunar
+
 # Kill focused window
 bindsym $mod+q kill
 
 # Fullscreen toggle
 bindsym $mod+f fullscreen toggle
+
+# Reset sway 
+bindsym $mod+Shift+r exec swaymsg reload
 
 # Move focus with arrow keys
 bindsym $mod+Left focus left
@@ -84,7 +94,7 @@ bindsym XF86MonBrightnessUp exec brightnessctl set +5%
 exec_always wpaperd
 
 ### Startup Commands ###
-exec_always waybar
+exec_always ./scripts/waybar_reset.sh
 exec_always nm-applet --indicator
 exec_always blueman-applet
 exec_always mako
@@ -99,5 +109,13 @@ bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
 # Screenshots
-bindsym Print exec grim ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H-%M-%S').png
-bindsym Shift+Print exec grim -g "$(slurp)" ~/Pictures/screenshot-$(date +'%Y-%m-%d-%H-%M-%S').png
+bindsym $mod+Shift+S exec grim ~/Pictures/Screenshots/screenshot-$(date +'%Y-%m-%d-%H-%M-%S').png
+bindsym $mod+S exec grim -g "$(slurp)" ~/Pictures/Screenshots/screenshot-$(date +'%Y-%m-%d-%H-%M-%S').png
+
+#swayidle configuration
+
+exec swayidle -w \
+  timeout 300 'swaylock -f -c 000000' \
+  timeout 600 'swaymsg "output * dpms off"' \
+  resume 'swaymsg "output * dpms on"' \
+  before-sleep 'swaylock -f -c 000000'
