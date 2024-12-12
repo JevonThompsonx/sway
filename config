@@ -94,7 +94,7 @@ bindsym XF86MonBrightnessUp exec brightnessctl set +5%
 exec_always wpaperd
 
 ### Startup Commands ###
-exec_always ./scripts/waybar_reset.sh
+exec_always --no-startup-id ./scripts/waybar_reset.sh
 exec_always nm-applet --indicator
 exec_always blueman-applet
 exec_always mako
@@ -102,6 +102,7 @@ exec_always copyq
 exec_always wl-paste -t text --watch clipman store
 exec_always wl-clipboard-history -t
 exec_always dunst &
+exec_always --no-startup-id variety &
 
 # Media keys
 bindsym XF86AudioPlay exec playerctl play-pause
