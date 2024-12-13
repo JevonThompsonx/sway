@@ -26,9 +26,10 @@ gaps outer 10
 
 ### Keybindings ###
 # Terminal (changed from Return to t)
-set $term foot
+set $term alacritty 
 bindsym $mod+t exec $term
-
+set $termBackup foot
+bindsym $mod+Shift+t exec $termBackup
 # Launchers
 bindsym $mod+d exec wofi --show drun --allow-images
 bindsym $mod+Shift+d exec nwg-drawer
