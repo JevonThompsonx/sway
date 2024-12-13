@@ -3,6 +3,8 @@
 # Set mod key to Command (Super) key on Mac
 set $mod Mod4
 
+# remove borders
+default_border none
 # Monitor settings for a MacBook Pro (2015) in Sway:
 # Replace this with the correct output name from `swaymsg -t get_outputs`
 output eDP-1 resolution 2560x1600 position 0 0 scale 1.75
@@ -21,7 +23,11 @@ input "type:keyboard" {
 ### General Settings ###
 gaps inner 5
 gaps outer 10
-
+default_border pixel 2
+client.focused #282c34 #61afef #61afef #ffffff
+client.focused_inactive #282c34 #3e4451 #3e4451 #ffffff
+client.unfocused #282c34 #2c323c #2c323c #aaaaaa
+client.urgent #282c34 #e06c75 #e06c75 #ffffff
 ### Defaults ### 
 set $term alacritty 
 set $termBackup foot
