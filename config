@@ -22,13 +22,16 @@ input "type:keyboard" {
 gaps inner 5
 gaps outer 10
 
+### Defaults ### 
+set $term alacritty 
+set $termBackup foot
+set $fileManager Thunar
+
 ### Layout ###
 
 ### Keybindings ###
 # Terminal (changed from Return to t)
-set $term alacritty 
 bindsym $mod+t exec $term
-set $termBackup foot
 bindsym $mod+Shift+t exec $termBackup
 # Launchers
 bindsym $mod+d exec wofi --show drun --allow-images
@@ -38,7 +41,7 @@ bindsym $mod+Shift+d exec nwg-drawer
 bindsym $mod+Shift+e exec nwg-bar
 
 #Thunar file manager 
-bindsym $mod+Shift+N exec Thunar
+bindsym $mod+Shift+N exec $fileManager
 
 # Kill focused window
 bindsym $mod+q kill
