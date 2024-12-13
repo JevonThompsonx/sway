@@ -1,6 +1,6 @@
 # sway
 Sway config 
 
-installs 
+## installs 
 
-sudo dnf install foot wofi waybar NetworkManager-applet blueman mako copyq wl-clipboard grim slurp brightnessctl playerctl pipewire-utils
+sudo dnf install foot wofi waybar blueman mako copyq wl-clipboard grim slurp brightnessctl playerctl pipewire-utils nm-applet 
