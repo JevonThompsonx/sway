@@ -151,6 +151,26 @@ EOF
     success "Environment file deployed"
 fi
 
+# ── Portals Config ───────────────────────────────────────────────────────
+if confirm "Deploy portals config? (required for file dialogs)" "y"; then
+    PORTALS_DIR="$CONFIG_DIR/xdg-desktop-portal"
+    mkdir -p "$PORTALS_DIR"
+
+    if [[ -f "$SCRIPT_DIR/portals.conf" ]]; then
+        cp "$SCRIPT_DIR/portals.conf" "$PORTALS_DIR/portals.conf"
+    else
+        cat > "$PORTALS_DIR/portals.conf" << 'EOF'
+[preferred]
+default=gtk
+org.freedesktop.impl.portal.ScreenCast=wlr
+org.freedesktop.impl.portal.Screenshot=wlr
+org.freedesktop.impl.portal.Secret=gnome-keyring
+org.freedesktop.impl.portal.Inhibit=none
+EOF
+    fi
+    success "Portals config deployed"
+fi
+
 # ── Waybar Config ───────────────────────────────────────────────────────────
 if confirm "Deploy waybar config?" "y"; then
     mkdir -p "$CONFIG_DIR/waybar"
@@ -224,7 +244,7 @@ fi
 if confirm "Set up GDM session entry?" "y"; then
     # Create wrapper script
     WRAPPER="/usr/local/bin/sway-launch.sh"
-    sudo tee "$wrapper" > /dev/null << 'WRAPPER'
+    sudo tee "$WRAPPER" > /dev/null << 'WRAPPER'
 #!/bin/bash
 # Sway launcher wrapper for GDM
 # Source user environment file if it exists
@@ -232,6 +252,10 @@ if [[ -f "$HOME/.config/sway/environment" ]]; then
     set -a
     source "$HOME/.config/sway/environment"
     set +a
+fi
+# GNOME Keyring — PAM module sets GNOME_KEYRING_CONTROL but Sway may lose it
+if [ -z "$GNOME_KEYRING_CONTROL" ] && [ -d "$XDG_RUNTIME_DIR/keyring" ]; then
+    export GNOME_KEYRING_CONTROL="$XDG_RUNTIME_DIR/keyring"
 fi
 # Ensure user paths are available
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/usr/local/bin:/usr/bin:$PATH"

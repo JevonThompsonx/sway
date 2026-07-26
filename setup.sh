@@ -178,8 +178,10 @@ install_packages_rocky() {
         fira-code-fonts
         # Misc (from base repos)
         jq curl wget git
-        # Wayland portal
-        xdg-desktop-portal-wlr
+        # Wayland portals (file dialogs, screenshots, secrets)
+        xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-wlr
+        # Keyring (Bitwarden, app passwords — auto-unlocks via PAM on login)
+        gnome-keyring
         # Seat management
         seatd
     )
@@ -273,8 +275,10 @@ install_packages_fedora() {
         fira-code-fonts
         # Misc
         jq curl wget git
-        # Wayland portal
-        xdg-desktop-portal-wlr
+        # Wayland portals (file dialogs, screenshots, secrets)
+        xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-wlr
+        # Keyring (Bitwarden, app passwords — auto-unlocks via PAM on login)
+        gnome-keyring
     )
 
     # SwayFX on Fedora
@@ -301,6 +305,10 @@ install_packages_apt() {
         thunar
         fonts-firacode
         jq curl wget git
+        # Wayland portals (file dialogs, screenshots, secrets)
+        xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-wlr
+        # Keyring (Bitwarden, app passwords — auto-unlocks via PAM on login)
+        gnome-keyring
     )
 
     if [[ "$USE_SWAYFX" == true ]]; then
@@ -501,6 +509,9 @@ deploy_configs() {
     # Environment file for Wayland
     deploy_environment_file
 
+    # Portals config (file dialogs, screenshots, secrets)
+    deploy_portals_conf
+
     # Fish helper functions
     if command -v fish &>/dev/null; then
         if confirm "Deploy fish helper functions? (ls, n)" "y"; then
@@ -576,6 +587,32 @@ EOF
     success "Environment file deployed to $env_file"
 }
 
+# ── Portals Config ───────────────────────────────────────────────────────
+deploy_portals_conf() {
+    local portals_dir="$HOME/.config/xdg-desktop-portal"
+    local portals_file="$portals_dir/portals.conf"
+    local script_dir
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+    mkdir -p "$portals_dir"
+
+    if [[ -f "$script_dir/portals.conf" ]]; then
+        cp "$script_dir/portals.conf" "$portals_file"
+        success "Portals config deployed to $portals_file"
+    else
+        # Generate inline if file not found
+        cat > "$portals_file" << 'EOF'
+[preferred]
+default=gtk
+org.freedesktop.impl.portal.ScreenCast=wlr
+org.freedesktop.impl.portal.Screenshot=wlr
+org.freedesktop.impl.portal.Secret=gnome-keyring
+org.freedesktop.impl.portal.Inhibit=none
+EOF
+        success "Portals config generated at $portals_file"
+    fi
+}
+
 # ── NVIDIA Setup ────────────────────────────────────────────────────────────
 setup_nvidia() {
     if [[ "$HAS_NVIDIA" != true ]]; then
@@ -647,6 +684,12 @@ if [[ -f "$HOME/.config/sway/environment" ]]; then
     set -a
     source "$HOME/.config/sway/environment"
     set +a
+fi
+
+# GNOME Keyring — PAM module sets GNOME_KEYRING_CONTROL but Sway may lose it
+# Derive from XDG_RUNTIME_DIR which PAM always sets
+if [ -z "$GNOME_KEYRING_CONTROL" ] && [ -d "$XDG_RUNTIME_DIR/keyring" ]; then
+    export GNOME_KEYRING_CONTROL="$XDG_RUNTIME_DIR/keyring"
 fi
 
 # Ensure user paths are available

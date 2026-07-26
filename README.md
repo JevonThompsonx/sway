@@ -33,6 +33,10 @@ Aphrodite runs Rocky Linux 10.2, which does **not** have Sway or most ecosystem 
 | Swaylock | 1.8.0 | `@sway-sig/epel` COPR | Screen lock |
 | Wmenu | 0.1.9 | `@sway-sig/epel` COPR | App launcher |
 | Grim + Slurp | 1.5.0 | `alonid/hyprland` COPR | Screenshots |
+| XDG Desktop Portal | — | System | Portal service (file dialogs) |
+| XDG Portal GTK | — | System | GTK file chooser backend |
+| XDG Portal WLR | — | System | wlroots screen capture |
+| GNOME Keyring | 42.1 | System | Secret storage (auto-unlock via PAM) |
 | Wl-clipboard | — | Already installed | Clipboard |
 | Lsd | 1.2.0 | EPEL | `ls` replacement for fish |
 | Seatd | 0.9.3 | EPEL | Seat management for wlroots |
@@ -98,7 +102,8 @@ sudo dnf copr enable -y alonid/hyprland rhel+epel-10-x86_64
 sudo dnf install -y \
     sway foot mako swaybg swayidle swaylock wmenu \
     grim slurp fira-code-fonts jq curl wget git \
-    xdg-desktop-portal-wlr seatd lsd network-manager-applet
+    xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-wlr \
+    gnome-keyring seatd lsd network-manager-applet
 ```
 
 ### Step 3: Build Waybar from Source
@@ -123,9 +128,10 @@ sudo ninja -C build install
 
 ```bash
 # Copy configs
-mkdir -p ~/.config/sway ~/.config/waybar ~/.config/foot
+mkdir -p ~/.config/sway ~/.config/waybar ~/.config/foot ~/.config/xdg-desktop-portal
 cp ~/sway-setup/sway-config ~/.config/sway/config
 cp ~/sway-setup/sway-environment ~/.config/sway/environment
+cp ~/sway-setup/portals.conf ~/.config/xdg-desktop-portal/portals.conf
 cp ~/sway-setup/waybar-config.jsonc ~/.config/waybar/config.jsonc
 cp ~/sway-setup/waybar-style.css ~/.config/waybar/style.css
 cp ~/sway-setup/foot.ini ~/.config/foot/foot.ini
@@ -147,6 +153,10 @@ if [[ -f "$HOME/.config/sway/environment" ]]; then
     set -a
     source "$HOME/.config/sway/environment"
     set +a
+fi
+# GNOME Keyring — PAM sets GNOME_KEYRING_CONTROL but Sway may lose it
+if [ -z "$GNOME_KEYRING_CONTROL" ] && [ -d "$XDG_RUNTIME_DIR/keyring" ]; then
+    export GNOME_KEYRING_CONTROL="$XDG_RUNTIME_DIR/keyring"
 fi
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:/usr/local/bin:/usr/bin:$PATH"
 exec sway "$@"
@@ -178,6 +188,7 @@ sudo systemctl enable --now seatd
 |------|---------|
 | `sway-config` | Main sway config (keybindings, appearance, startup) |
 | `sway-environment` | Env vars read BEFORE sway starts (GPU selection, Wayland compat) |
+| `portals.conf` | XDG portal routing (file dialogs, screenshots, secrets) |
 | `waybar-config.jsonc` | Waybar modules and layout |
 | `waybar-style.css` | Waybar styling |
 | `foot.ini` | Foot terminal config |
@@ -255,6 +266,56 @@ vim ~/.config/sway/environment
 ```bash
 # Run manually to see errors
 waybar 2>&1 | tee /tmp/waybar.log
+```
+
+### File dialogs not working (bookmark import/export, Bitwarden export)
+
+File dialogs in browsers and apps need `xdg-desktop-portal` to work under Wayland.
+Symptoms: clicking "Import/Export" does nothing, no file picker appears.
+
+```bash
+# Check portal services are running
+systemctl --user status xdg-desktop-portal.service
+systemctl --user status xdg-desktop-portal-gtk.service
+
+# If portal-gtk is crashed with "cannot open display:", env not propagated
+# Fix: reload sway config (Ctrl+Shift+R) or restart portals
+systemctl --user restart xdg-desktop-portal.service
+systemctl --user restart xdg-desktop-portal-gtk.service
+
+# Verify portals.conf exists
+cat ~/.config/xdg-desktop-portal/portals.conf
+
+# Check portal logs for errors
+journalctl --user -u xdg-desktop-portal-gtk.service -n 20
+```
+
+The sway config must propagate env to systemd for portals to find the Wayland display:
+```bash
+# This line in ~/.config/sway/config startup section is critical:
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_RUNTIME_DIR GNOME_KEYRING_CONTROL SSH_AUTH_SOCK
+```
+
+### Bitwarden asks for password on every reboot
+
+Bitwarden uses `gnome-keyring` for secret storage. The keyring is unlocked at login
+by PAM, but Sway may lose the `GNOME_KEYRING_CONTROL` env var.
+
+```bash
+# Check if keyring control socket exists
+ls $XDG_RUNTIME_DIR/keyring/control
+
+# Check if env var is set
+echo $GNOME_KEYRING_CONTROL
+
+# If empty, the wrapper script needs the keyring fix (see setup.sh)
+# Quick fix: export it manually
+export GNOME_KEYRING_CONTROL="$XDG_RUNTIME_DIR/keyring"
+
+# Verify keyring is accessible
+secret-tool store --label="test" service test-key  # should prompt once
+secret-tool lookup service test-key                  # should return password
+secret-tool clear service test-key                   # cleanup
 ```
 
 ---

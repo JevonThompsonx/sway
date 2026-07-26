@@ -121,6 +121,10 @@ bindsym $mod+w exec wpaperctl next
 for_window [app_id="blueman-manager"] floating enable, move position center
 
 # ── Startup Commands ────────────────────────────────────────────────────
+# Propagate env to systemd user session — required for portal services (file dialogs)
+# and gnome-keyring (Bitwarden, app password storage)
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_RUNTIME_DIR GNOME_KEYRING_CONTROL SSH_AUTH_SOCK
+
 exec_always sh -c 'killall waybar 2>/dev/null; sleep 0.5; exec waybar'
 exec_always sh -c 'killall wpaperd 2>/dev/null; exec wpaperd'
 # nm-applet not available on Rocky 10 — GNOME handles networking via GDM
