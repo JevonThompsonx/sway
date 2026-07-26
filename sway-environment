@@ -1,0 +1,18 @@
+# User-specific environment variables for Sway
+# These are read by sway BEFORE initialization — critical for GPU selection
+
+# ── GPU Selection ────────────────────────────────────────────────────────
+# Intel HD 530 = card1 (pci-0000:00:02.0)
+# NVIDIA Quadro M2000M = card0 (pci-0000:01:00.0)
+# Using Intel-only for stability on Wayland
+WLR_DRM_DEVICES=/dev/dri/card1
+
+# ── Wayland compatibility ────────────────────────────────────────────────
+MOZ_ENABLE_WAYLAND=1
+QT_QPA_PLATFORM=wayland
+QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+QT_QPA_PLATFORMTHEME=qt6ct
+
+# ── XDG session ──────────────────────────────────────────────────────────
+XDG_CURRENT_DESKTOP=sway
+XDG_SESSION_DESKTOP=sway

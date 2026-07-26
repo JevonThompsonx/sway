@@ -1,0 +1,32 @@
+{
+    "height": 30,
+    "modules-left": [
+        "sway/workspaces"
+    ],
+    "modules-center": [
+        "sway/window"
+    ],
+    "modules-right": [
+        "tray",
+        "clock",
+        "cpu",
+        "memory",
+        "battery"
+    ],
+    "tray": {
+        "icon-size": 16,
+        "spacing": 10
+    },
+    "clock": {
+        "format": "{:%Y-%m-%d %H:%M:%S}"
+    },
+    "cpu": {
+        "format": "CPU: {usage}%"
+    },
+    "memory": {
+        "format": "RAM: {used}GB"
+    },
+    "battery": {
+        "format": "BAT: {capacity}%"
+    }
+}
