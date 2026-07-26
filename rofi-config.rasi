@@ -1,0 +1,97 @@
+/* ── Rofi Config ─────────────────────────────────────────────────────── */
+configuration {
+    show-icons:                 true;
+    icon-theme:                 "Papirus";
+    display-drun:               " Apps";
+    display-run:                " Run";
+    drun-display-format:        "{name}";
+    font:                       "FiraCode Nerd Font 11";
+    modi:                       "drun,run";
+}
+
+/* ── Theme ──────────────────────────────────────────────────────────── */
+* {
+    bg:         #1e1e2e;
+    bg-alt:     #313244;
+    fg:         #cdd6f4;
+    fg-alt:     #a6adc8;
+    accent:     #89b4fa;
+    urgent:     #f38ba8;
+    background-color:   transparent;
+    text-color:         @fg;
+    margin:     0;
+    padding:    0;
+    spacing:    0;
+}
+
+window {
+    width:              500px;
+    background-color:   @bg;
+    border:             2px;
+    border-color:       @accent;
+    border-radius:      12px;
+    padding:            20px;
+}
+
+inputbar {
+    spacing:            8px;
+    padding:            8px 12px;
+    background-color:   @bg-alt;
+    border-radius:      8px;
+    children:           [ prompt, entry ];
+}
+
+prompt {
+    text-color:     @accent;
+    font:           "FiraCode Nerd Font Bold 11";
+}
+
+entry {
+    placeholder:        "Search...";
+    placeholder-color:  @fg-alt;
+    font:               "FiraCode Nerd Font 11";
+}
+
+listview {
+    lines:          8;
+    columns:        1;
+    spacing:        4px;
+    padding:        8px 0 0 0;
+    scrollbar:      false;
+}
+
+element {
+    padding:        8px 12px;
+    border-radius:  6px;
+    spacing:        10px;
+}
+
+element normal.normal {
+    background-color:   transparent;
+    text-color:         @fg;
+}
+
+element normal.active {
+    background-color:   @bg-alt;
+    text-color:         @accent;
+}
+
+element selected.normal {
+    background-color:   @accent;
+    text-color:         @bg;
+}
+
+element selected.active {
+    background-color:   @accent;
+    text-color:         @bg;
+}
+
+element-icon {
+    size:           24px;
+    vertical-align: 0.5;
+}
+
+element-text {
+    vertical-align: 0.5;
+    text-color:     inherit;
+}

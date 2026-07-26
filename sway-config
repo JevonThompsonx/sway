@@ -114,6 +114,9 @@ bindsym $mod+s exec grim -g "$(slurp)" ~/Pictures/Screenshots/screenshot-$(date 
 # ── Lock Screen ─────────────────────────────────────────────────────────
 bindsym $mod+Escape exec swaylock -c 000000
 
+# ── Wallpaper ───────────────────────────────────────────────────────────
+bindsym $mod+w exec kill -SIGUSR1 $(pgrep wpaperd)
+
 # ── Floating Rules ──────────────────────────────────────────────────────
 for_window [app_id="blueman-manager"] floating enable, move position center
 
