@@ -361,6 +361,7 @@ install_optional() {
                     wpaperd)
                         if command -v cargo &>/dev/null; then
                             cargo install wpaperd
+                            cargo install wpaperctl
                         else
                             warn "cargo not found. Install Rust first: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
                         fi
