@@ -7,7 +7,8 @@
         "sway/window"
     ],
     "modules-right": [
-        "tray",
+        "custom/network",
+        "bluetooth",
         "clock",
         "cpu",
         "memory",
@@ -16,6 +17,22 @@
     "tray": {
         "icon-size": 16,
         "spacing": 10
+    },
+    "custom/network": {
+        "exec": "~/.config/waybar/scripts/network.sh",
+        "return-type": "json",
+        "format": "{}",
+        "on-click": "nm-connection-editor",
+        "interval": 5,
+        "tooltip": true
+    },
+    "bluetooth": {
+        "format-on": " ",
+        "format-off": " ",
+        "format-connected": " {num_connections}",
+        "tooltip-format": "{device_alias}\n{device_address}",
+        "on-click": "gnome-control-center bluetooth",
+        "interval": 5
     },
     "clock": {
         "format": "{:%Y-%m-%d %H:%M:%S}"

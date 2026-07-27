@@ -45,6 +45,12 @@ window#waybar {
 #custom-audiorec,
 #battery, 
 #clock, 
-#network {
+#custom-network,
+#bluetooth {
 	padding: 0 10px;
+}
+
+#custom-network.disconnected,
+#bluetooth.off {
+    color: #6c7086;
 }
