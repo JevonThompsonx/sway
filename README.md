@@ -386,3 +386,32 @@ Safe to re-run (idempotent).
 
 - `setup.sh` — fresh install (prompts)
 - `deploy.sh` — one-shot deploy (prompts)
+
+---
+
+## Power Menu (`$mod+Shift+e`)
+
+The power menu (bound to `Super+Shift+E`) uses a wofi-based dmenu script
+that shows **7 options** in this order:
+
+| # | Action | Command |
+|---|--------|---------|
+| 1 | Cancel | `exit 0` (no-op) |
+| 2 | Lock | `swaylock -c 000000` |
+| 3 | Logout | `swaymsg exit` |
+| 4 | Suspend | `systemctl suspend` |
+| 5 | Hibernate | `systemctl hibernate` |
+| 6 | Reboot | `systemctl reboot` |
+| 7 | Shutdown | `systemctl poweroff` |
+
+Source: [`scripts/power-menu.sh`](scripts/power-menu.sh). Deployed to
+`~/.config/sway/scripts/power-menu.sh` by both `setup.sh` and `deploy.sh`.
+
+Nerd Font icons used in the menu (PUA codepoints):
+- `U+F015` Cancel (X)
+- `U+F023` Lock
+- `U+F2F5` Logout (sign-out)
+- `U+F186` Suspend (weather-night)
+- `U+F2DC` Hibernate (heart-pulse)
+- `U+F49B` Reboot (restore)
+- `U+F704` Shutdown (power-standby)

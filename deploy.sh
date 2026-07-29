@@ -188,6 +188,26 @@ if confirm "Deploy waybar config?" "y"; then
     fi
 fi
 
+# ── Sway Scripts (power-menu, network, bluetooth, fkey-actions) ──────────
+if [[ -d "$SCRIPT_DIR/scripts" ]]; then
+    if confirm "Deploy sway scripts? (power-menu, network, bluetooth, fkey-actions)" "y"; then
+        mkdir -p "$CONFIG_DIR/sway/scripts"
+        for script in "$SCRIPT_DIR/scripts/"*.sh; do
+            [[ -f "$script" ]] || continue
+            cp "$script" "$CONFIG_DIR/sway/scripts/"
+            chmod +x "$CONFIG_DIR/sway/scripts/$(basename "$script")"
+        done
+        success "Sway scripts deployed to $CONFIG_DIR/sway/scripts/"
+
+        # If fkey-actions.sh is deployed, also install to /usr/local/bin for $mod+F-key binds
+        if [[ -f "$CONFIG_DIR/sway/scripts/fkey-actions.sh" ]] && confirm "Install fkey-actions.sh to /usr/local/bin? (needed for F1-F12 bindsyms)" "n"; then
+            sudo cp "$CONFIG_DIR/sway/scripts/fkey-actions.sh" /usr/local/bin/fkey-actions.sh
+            sudo chmod +x /usr/local/bin/fkey-actions.sh
+            success "fkey-actions.sh installed to /usr/local/bin/"
+        fi
+    fi
+fi
+
 # ── Foot Config ─────────────────────────────────────────────────────────────
 if confirm "Deploy foot config?" "y"; then
     mkdir -p "$CONFIG_DIR/foot"

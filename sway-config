@@ -116,7 +116,7 @@ bindsym $mod+s exec grim -g "$(slurp)" ~/Pictures/Screenshots/screenshot-$(date 
 bindsym $mod+Escape exec swaylock -c 000000
 
 # ── Power Menu ──────────────────────────────────────────────────────────
-bindsym $mod+Shift+e exec ~/.config/rofi/power-menu.sh
+bindsym $mod+Shift+e exec ~/.config/sway/scripts/power-menu.sh
 
 # ── Wallpaper ───────────────────────────────────────────────────────────
 bindsym $mod+w exec wpaperctl next

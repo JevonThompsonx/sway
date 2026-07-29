@@ -498,6 +498,26 @@ deploy_configs() {
         fi
     fi
 
+    # Sway scripts (power-menu, network, bluetooth, fkey-actions)
+    if [[ -d "$script_dir/scripts" ]]; then
+        if confirm "Deploy sway scripts? (power-menu, network, bluetooth, fkey-actions)" "y"; then
+            mkdir -p "$config_dir/sway/scripts"
+            for script in "$script_dir/scripts/"*.sh; do
+                [[ -f "$script" ]] || continue
+                cp "$script" "$config_dir/sway/scripts/"
+                chmod +x "$config_dir/sway/scripts/$(basename "$script")"
+            done
+            success "Sway scripts deployed to $config_dir/sway/scripts/"
+
+            # Optional: install fkey-actions.sh to /usr/local/bin for F1-F12 bindsyms
+            if [[ -f "$config_dir/sway/scripts/fkey-actions.sh" ]] && confirm "Install fkey-actions.sh to /usr/local/bin? (needed for F1-F12 bindsyms)" "n"; then
+                sudo cp "$config_dir/sway/scripts/fkey-actions.sh" /usr/local/bin/fkey-actions.sh
+                sudo chmod +x /usr/local/bin/fkey-actions.sh
+                success "fkey-actions.sh installed to /usr/local/bin/"
+            fi
+        fi
+    fi
+
     # Alacritty theme (needed for the config)
     if [[ ! -d "$config_dir/alacritty/themes" ]]; then
         if confirm "Clone alacritty themes? (needed for flat_remix theme)" "y"; then
