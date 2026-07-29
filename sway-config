@@ -44,8 +44,9 @@ bindsym $mod+Return exec $term
 bindsym $mod+Shift+t exec $termBackup
 
 # Launcher
-bindsym $mod+d exec rofi -show drun
-bindsym $mod+space exec rofi -show drun
+bindsym $mod+d exec wofi --show drun
+bindsym $mod+Shift+d exec wofi --show drun -W 100% -H 100% --lines=0
+bindsym $mod+space exec wofi --show drun
 
 # Browser
 bindsym $mod+b exec $browser
@@ -134,3 +135,17 @@ exec_always sh -c 'killall wpaperd 2>/dev/null; exec wpaperd'
 # blueman not available — install with: sudo dnf install blueman
 # exec --no-startup-id blueman-applet
 exec mako
+
+# ── F-Key Actions (HP ZBook 15 G3) ─────────────────────────────────
+bindsym F1 exec /usr/local/bin/fkey-actions.sh 1
+bindsym F2 exec /usr/local/bin/fkey-actions.sh 2
+bindsym --no-repeat F3 exec /usr/local/bin/fkey-actions.sh 3
+bindsym F4 exec /usr/local/bin/fkey-actions.sh 4
+bindsym F5 exec /usr/local/bin/fkey-actions.sh 5
+bindsym F6 exec /usr/local/bin/fkey-actions.sh 6
+bindsym F7 exec /usr/local/bin/fkey-actions.sh 7
+bindsym F8 exec /usr/local/bin/fkey-actions.sh 8
+bindsym F9 exec /usr/local/bin/fkey-actions.sh 9
+bindsym --no-repeat F10 exec /usr/local/bin/fkey-actions.sh 10
+bindsym F11 exec /usr/local/bin/fkey-actions.sh 11
+bindsym --no-repeat F12 exec /usr/local/bin/fkey-actions.sh 12

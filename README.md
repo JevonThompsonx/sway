@@ -348,3 +348,41 @@ When deploying Kentucky's config to Aphrodite:
 6. **GDM session** — Wrapper script created to source environment file before launching sway.
 7. **Seatd** — Installed and enabled (required for wlroots on Rocky).
 8. **Removed SwayFX directives** — blur, shadows, corner_radius (vanilla sway doesn't support these).
+
+---
+
+## Dark Theme (Dracula GTK + Papirus-Dark)
+
+The system uses a unified dark theme stack:
+
+| Layer | Theme |
+|-------|-------|
+| Wayland window borders | `#282c34` (One Dark) |
+| Status bar (waybar) | Catppuccin Mocha |
+| Terminal (alacritty) | Catppuccin Mocha inline |
+| Terminal (foot) | Black + ANSI palette |
+| Launcher (wofi) | `#292e42` background |
+| GTK apps (gsettings) | **Dracula** |
+| Icon theme | **Papirus-Dark** |
+| Color scheme | `prefer-dark` |
+
+### Apply dark theme on a new system
+
+Run `theme-apply.sh` directly:
+
+```bash
+./theme-apply.sh
+```
+
+This will:
+1. Download Dracula GTK theme from GitHub releases (v4.0.0) → `~/.themes/Dracula`
+2. Install Papirus-Dark icon theme via `dnf` / `apt` / `pacman`
+3. Set gsettings: `gtk-theme=Dracula`, `icon-theme=Papirus-Dark`, `color-scheme=prefer-dark`
+4. Write `~/.config/gtk-3.0/settings.ini` and `~/.config/gtk-4.0/settings.ini` for persistence
+
+Safe to re-run (idempotent).
+
+### Auto-applied by
+
+- `setup.sh` — fresh install (prompts)
+- `deploy.sh` — one-shot deploy (prompts)

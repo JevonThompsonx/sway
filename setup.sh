@@ -613,6 +613,22 @@ EOF
     fi
 }
 
+# ── Dark Theme (Dracula GTK + Papirus-Dark icons) ──────────────────────────
+apply_dark_theme() {
+    local script_dir
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+    if [[ ! -f "$script_dir/theme-apply.sh" ]]; then
+        warn "theme-apply.sh not found, skipping dark theme"
+        return
+    fi
+
+    echo ""
+    if confirm "Apply Dracula dark theme? (Dracula GTK + Papirus-Dark icons)" "y"; then
+        bash "$script_dir/theme-apply.sh" || warn "theme-apply.sh failed — dark theme not applied"
+    fi
+}
+
 # ── NVIDIA Setup ────────────────────────────────────────────────────────────
 setup_nvidia() {
     if [[ "$HAS_NVIDIA" != true ]]; then
@@ -846,6 +862,7 @@ main() {
     setup_nvidia
     setup_gdm_session
     enable_services
+    apply_dark_theme
     setup_fish
     print_summary
 }

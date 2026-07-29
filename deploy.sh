@@ -215,6 +215,13 @@ else
     info "Skipped alacritty (keeping existing config)"
 fi
 
+# ── Dark Theme (Dracula GTK + Papirus-Dark icons) ──────────────────────────
+if [[ -f "$SCRIPT_DIR/theme-apply.sh" ]]; then
+    if confirm "Apply Dracula dark theme? (Dracula GTK + Papirus-Dark icons)" "y"; then
+        bash "$SCRIPT_DIR/theme-apply.sh" || warn "theme-apply.sh failed — dark theme not applied"
+    fi
+fi
+
 # ── Fish Functions ──────────────────────────────────────────────────────────
 if confirm "Deploy fish helper functions? (ls, n)" "y"; then
     mkdir -p "$CONFIG_DIR/fish/functions"
